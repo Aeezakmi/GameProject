@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-Register!
+
+{{ form_start(playerForm) }}
+{{ form_widget(playerForm) }}
+<input type="submit" value="Register">
+{{ form_end(playerForm) }}
+
 {% endblock %}
