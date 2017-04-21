@@ -4,40 +4,62 @@
     <meta charset="UTF-8"/>
     <title>{% block title %}GameProject{% endblock %}</title>
 
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
     {% block stylesheets %}{% endblock %}
-
-
-
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="{{ path('homepage') }}">GameProject</a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li><a href="{{ path('homepage') }}">Home</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ path('player_login_form') }}"><span class="glyphicon glyphicon-log-in"></span> Log in</a>
-                </li>
-                <li><a href="{{ path('player_register_form') }}"><span class="glyphicon glyphicon-user"></span> Register</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
 </head>
 
 <body>
 
-{% block body %}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ path('homepage') }}">GameProject</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="{{ path('homepage') }}">Home</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if is_granted('ROLE_USER') %}
+
+                <li><a  href="{{ path('security_logout') }}">Logout</a></li>
+            {% else %}
+
+                <li><a href="{{ path('security_login') }}"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+                <li><a href="{{ path('player_register_form') }}"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+
+            {% endif %}
 
 
 
-{% endblock %}
+        </ul>
+    </div>
+</nav>
 
+<div class="main-content">
+    {% for msg in app.session.flashBag.get('success') %}
+        <div class="alert alert-success">
+            {{ msg }}
+        </div>
+    {% endfor %}
+
+    {% block body %}
+
+
+
+    {% endblock %}
+</div>
+
+<div class="footer">
+    <p class="footer-text">GameProject 2017</p>
+</div>
 
 {% block javascripts %}{% endblock %}
-<link href="{{ asset('js/bootstrap.min.js') }}">
+
+<script src="{{ asset('js/jquery-2.1.4.min.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+
 </body>
 </html>

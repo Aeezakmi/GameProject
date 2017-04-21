@@ -7,6 +7,7 @@ use function Sodium\add;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +19,16 @@ class PlayerType extends AbstractType
     {
         $builder
             ->add('nickname', TextType::class)
-            ->add('password', RepeatedType::class)
+            ->add('password', RepeatedType::class,
+                [
+                    'type'=> PasswordType::class,
+                    'first_options'=>
+                        ['label'=>'Password'],
+                    'second_options'=>
+                        ['label'=>'Repeat Password'],
+                    'invalid_message' => "Try again!"
+                ]
+            )
             ->add('email', EmailType::class)
             ->add('age', IntegerType::class);
     }

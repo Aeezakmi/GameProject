@@ -7,3 +7,6 @@ services:
     #service_name:
     #    class: GameBundle\Directory\ClassName
     #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
+     app.security.login_form_authenticator:
+        class: GameBundle\Controller\Security\LoginFormAuthenticator
+        autowire: true

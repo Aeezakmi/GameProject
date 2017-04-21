@@ -23,7 +23,7 @@ class PlayersController extends Controller
             [
                 'playerForm' => $form->createView()
             ]
-            );
+        );
     }
 
     /**
@@ -51,19 +51,11 @@ class PlayersController extends Controller
 
             $this->addFlash('success', "You registered successfully.");
 
-            return $this->redirectToRoute('player_login_form');
+            return $this->redirectToRoute('security_login');
+
         }
 
-        $this->redirectToRoute('player_register_form');
+        return $this->redirectToRoute('player_register_form');
 
-    }
-
-
-    /**
-     * @Route("/login", name="player_login_form")
-     */
-    public function loginPlayerAction()
-    {
-        return $this->render(':players:login.html.twig');
     }
 }
