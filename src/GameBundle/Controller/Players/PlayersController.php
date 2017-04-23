@@ -3,6 +3,7 @@
 namespace GameBundle\Controller\Players;
 
 use GameBundle\Entity\Player;
+use GameBundle\Entity\Role;
 use GameBundle\Form\PlayerType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -33,12 +34,17 @@ class PlayersController extends Controller
     public function registerPlayerAction(Request $request){
         $player = new Player();
 
-        $form = $this->createForm(
-            PlayerType::class,
-            $player);
+        $form = $this->createForm(PlayerType::class,$player);
         $form->handleRequest($request);
 
-        if ($form->isValid() && $form->isSubmitted()){
+        $age = $player->calcAge($player->getBirthdate());
+
+        if ($form->isValid() && $age >= 18){
+            $player->setAge($age);
+
+            $rollRepository = $this->getDoctrine()->getRepository(Role::class);
+            $userRole = $rollRepository->findOneBy(['name' => 'ROLE_USER']);
+            $player->addRole($userRole);
 
             $password = $this->get('security.password_encoder')
                 ->encodePassword($player, $player->getPassword());
@@ -53,6 +59,9 @@ class PlayersController extends Controller
 
             return $this->redirectToRoute('security_login');
 
+        }
+        if ($age < 18) {
+            $this->addFlash('error', "You need to be over 18 to register!");
         }
 
         return $this->redirectToRoute('player_register_form');

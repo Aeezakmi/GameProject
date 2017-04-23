@@ -2,18 +2,21 @@
 
 namespace GameBundle\Entity;
 
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Player
  *
- * @ORM\Table(name="player")
+ * @ORM\Table(name="players")
  * @ORM\Entity(repositoryClass="GameBundle\Repository\PlayerRepository")
  */
 
 class Player implements UserInterface
 {
+
     /**
      * @var int
      *
@@ -51,6 +54,73 @@ class Player implements UserInterface
      */
     private $age;
 
+    /**
+     * @ORM\Column(name="birthdate", type="datetimetz")
+     */
+    private $birthdate;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="GameBundle\Entity\Role")
+     * @ORM\JoinTable(name="players_roles",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="role_id",referencedColumnName="id")}
+     *     )
+     */
+    private $roles;
+
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return (Role|string)[] The user roles
+     */
+    public function getRoles()
+    {
+        $stringRoles = [];
+        foreach ($this->roles as $role)
+        {
+            /** @var $role Role */
+            $stringRoles[] = is_string($role) ? $role : $role->getRole();
+        }
+        return $stringRoles;
+    }
+
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
+
+    public function addRole(Role $role)
+    {
+        $this->roles[] = $role;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(){
+        return in_array('ROLE_ADMIN', $this->getRoles());
+    }
+
+    public function setRoles(array $roles)
+    {
+        $this->roles = $roles;
+        return $this;
+    }
 
     /**
      * Get id
@@ -143,9 +213,8 @@ class Player implements UserInterface
      */
     public function setAge($age)
     {
-        $this->age = $age;
+        $this->age =  $age;
 
-        return $this;
     }
 
     /**
@@ -158,26 +227,7 @@ class Player implements UserInterface
         return $this->age;
     }
 
-    /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return (Role|string)[] The user roles
-     */
-    public function getRoles()
-    {
-       return ['ROLE_USER'];
-    }
+
 
     /**
      * Returns the salt that was originally used to encode the password.
@@ -210,6 +260,27 @@ class Player implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getBirthdate()
+    {
+        return $this->birthdate;
+    }
+
+    public function setBirthdate($birthdate)
+    {
+        $this->birthdate = $birthdate;
+    }
+
+    function calcAge($dob){
+        if(!empty($dob)){
+            $birthdate = $dob;
+            $today   = new DateTime('today');
+            $age = $birthdate->diff($today)->y;
+            return $age;
+        }else{
+            return 0;
+        }
     }
 }
 

@@ -1,9 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
+{% block main %}
+    <div class="form-group">
                 <h1>Login!</h1>
 
                 {% if error %}
@@ -17,9 +15,6 @@
                 {{ form_row(form._password) }}
                 <button type="submit" class="btn btn-success">Login<span class="glyphicon glyphicon-lock"></span></button>
                 {{ form_end(form) }}
-
-            </div>
-        </div>
     </div>
 
 {% endblock %}

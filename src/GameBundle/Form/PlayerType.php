@@ -3,10 +3,9 @@
 namespace GameBundle\Form;
 
 use GameBundle\Entity\Player;
-use function Sodium\add;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,14 +22,14 @@ class PlayerType extends AbstractType
                 [
                     'type'=> PasswordType::class,
                     'first_options'=>
-                        ['label'=>'Password'],
+                        ['label'=>'Password:'],
                     'second_options'=>
-                        ['label'=>'Repeat Password'],
+                        ['label'=>'Repeat Password:'],
                     'invalid_message' => "Try again!"
                 ]
             )
             ->add('email', EmailType::class)
-            ->add('age', IntegerType::class);
+            ->add('birthdate', BirthdayType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

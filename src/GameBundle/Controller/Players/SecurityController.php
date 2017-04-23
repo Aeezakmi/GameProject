@@ -1,6 +1,6 @@
 <?php
 
-namespace GameBundle\Controller;
+namespace GameBundle\Controller\Players;
 
 
 use GameBundle\Form\LoginForm;
