@@ -2,9 +2,11 @@
 
 namespace GameBundle\Controller\Players;
 
+use GameBundle\Entity\Base;
 use GameBundle\Entity\Player;
 use GameBundle\Entity\Role;
 use GameBundle\Form\PlayerType;
+use GameBundle\Repository\PlayerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -40,11 +42,17 @@ class PlayersController extends Controller
         $age = $player->calcAge($player->getBirthdate());
 
         if ($form->isValid() && $age >= 18){
+
             $player->setAge($age);
 
-            $rollRepository = $this->getDoctrine()->getRepository(Role::class);
-            $userRole = $rollRepository->findOneBy(['name' => 'ROLE_USER']);
+            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
+            $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
             $player->addRole($userRole);
+
+            $baseRepo = $this->getDoctrine()->getRepository(Player::class);
+
+            $base = new Base();
+            $base->addBase($player,$baseRepo);
 
             $password = $this->get('security.password_encoder')
                 ->encodePassword($player, $player->getPassword());
