@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <h1> Hello, {{ player.nickname }}!</h1>
+    <h1> You are {{ player.age }} years old.</h1>
+    <h1> You are born on {{ player.birthdate|date('d-m-Y')}}.</h1>
+    <h1> Your apartment is level {{ player.apartment.level }}!</h1>
+    <h1> You have {{ player.resource.kinti }} Leva!</h1>
+    <h1> And {{ player.resource.mutri }} mutri!</h1>
+
+
+{% endblock %}
+

@@ -7,8 +7,12 @@
         </div>
     {% endfor %}
 
-{{ form_start(playerForm) }}
-    {{ form_widget(playerForm) }}
+    {{ form_start(playerForm) }}
+    {{ form_row(playerForm.nickname) }}
+    {{ form_row(playerForm.email) }}
+    {{ form_row(playerForm.password.first) }}
+    {{ form_row(playerForm.password.second) }}
+    {{ form_row(playerForm.birthdate) }}
     <input type="submit" value="Register">
 {{ form_end(playerForm) }}
 

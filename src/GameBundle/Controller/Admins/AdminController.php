@@ -10,8 +10,8 @@ class AdminController extends Controller
     /**
      * @Route("/admin/admin_page", name="admin_page")
      */
-    public function indexAction()
-    {
-        return $this->render(':admins:admins.html.twig');
+    public function indexAction(){
+
+        return $this->render('admins/admins.html.twig');
     }
 }

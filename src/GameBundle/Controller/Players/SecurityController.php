@@ -17,6 +17,10 @@ class SecurityController extends Controller
      */
     public function loginPlayerAction(Request $request)
     {
+        if ($this->get("security.authorization_checker")->isGranted("ROLE_USER")) {
+            return $this->redirectToRoute("homepage");
+        }
+
         $authenticationUtils = $this->get('security.authentication_utils');
 
         // get the login error if there is one

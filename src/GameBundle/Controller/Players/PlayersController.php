@@ -2,14 +2,18 @@
 
 namespace GameBundle\Controller\Players;
 
+use GameBundle\Entity\Apartment;
 use GameBundle\Entity\Base;
+use GameBundle\Entity\Discotech;
 use GameBundle\Entity\Player;
+use GameBundle\Entity\Resource;
 use GameBundle\Entity\Role;
 use GameBundle\Form\PlayerType;
-use GameBundle\Repository\PlayerRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class PlayersController extends Controller
@@ -20,6 +24,10 @@ class PlayersController extends Controller
      */
     public function registerPlayerForm()
     {
+        if ($this->get("security.authorization_checker")->isGranted("ROLE_USER")) {
+            return $this->redirectToRoute("homepage");
+        }
+
         $form = $this->createForm(PlayerType::class);
 
         return $this->render(':players:register.html.twig',
@@ -34,6 +42,11 @@ class PlayersController extends Controller
      * @Method("POST")
      */
     public function registerPlayerAction(Request $request){
+
+        if ($this->get("security.authorization_checker")->isGranted("ROLE_USER")) {
+            return $this->redirectToRoute("homepage");
+        }
+
         $player = new Player();
 
         $form = $this->createForm(PlayerType::class,$player);
@@ -45,11 +58,16 @@ class PlayersController extends Controller
 
             $player->setAge($age);
 
+
             $roleRepository = $this->getDoctrine()->getRepository(Role::class);
             $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
             $player->addRole($userRole);
 
             $baseRepo = $this->getDoctrine()->getRepository(Player::class);
+
+            $player->setResource(new Resource($player));
+            $player->setApartment(new Apartment($player));
+            $player->setDiscotech(new Discotech($player));
 
             $base = new Base();
             $base->addBase($player,$baseRepo);
@@ -72,7 +90,21 @@ class PlayersController extends Controller
             $this->addFlash('error', "You need to be over 18 to register!");
         }
 
-        return $this->redirectToRoute('player_register_form');
-
+        return $this->render(':players:register.html.twig',
+            [
+                'playerForm' => $form->createView()
+            ]
+        );
+    }
+    /**
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Route("/profile", name="player_profile")
+     */
+    public function profileAction(){
+        $player = $this->getUser();
+        return $this->render('players/profile.html.twig',
+            [
+                'player' => $player
+            ]);
     }
 }

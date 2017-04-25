@@ -64,7 +64,7 @@ class Player implements UserInterface
      *
      * @ORM\ManyToMany(targetEntity="GameBundle\Entity\Role")
      * @ORM\JoinTable(name="players_roles",
-     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     joinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="id")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="role_id",referencedColumnName="id")}
      *     )
      */
@@ -77,7 +77,25 @@ class Player implements UserInterface
      * @ORM\Column(name="pos_y", type="integer")
      */
     private $posY;
+    /**
+     * @var Apartment
+     *
+     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Apartment", inversedBy="player", cascade={"persist"})
+     */
+    private $apartment;
 
+    /**
+     * @var Resource
+     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Resource", inversedBy="player", cascade={"persist"})
+     */
+    private $resource;
+
+    /**
+     * @var Discotech
+     *
+     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Discotech", inversedBy="player", cascade={"persist"})
+     */
+    private $discotech;
 
     public function getRoles()
     {
@@ -114,47 +132,22 @@ class Player implements UserInterface
         return $this;
     }
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Set nickname
-     *
-     * @param string $nickname
-     *
-     * @return Player
-     */
     public function setNickname($nickname)
     {
         $this->nickname = $nickname;
 
         return $this;
     }
-
-    /**
-     * Get nickname
-     *
-     * @return string
-     */
     public function getNickname()
     {
         return $this->nickname;
     }
 
-    /**
-     * Set password
-     *
-     * @param string $password
-     *
-     * @return Player
-     */
     public function setPassword($password)
     {
         $this->password = $password;
@@ -162,23 +155,11 @@ class Player implements UserInterface
         return $this;
     }
 
-    /**
-     * Get password
-     *
-     * @return string
-     */
     public function getPassword()
     {
         return $this->password;
     }
 
-    /**
-     * Set email
-     *
-     * @param string $email
-     *
-     * @return Player
-     */
     public function setEmail($email)
     {
         $this->email = $email;
@@ -186,34 +167,18 @@ class Player implements UserInterface
         return $this;
     }
 
-    /**
-     * Get email
-     *
-     * @return string
-     */
     public function getEmail()
     {
         return $this->email;
     }
 
-    /**
-     * Set age
-     *
-     * @param integer $age
-     *
-     * @return Player
-     */
+
     public function setAge($age)
     {
         $this->age = $age;
 
     }
 
-    /**
-     * Get age
-     *
-     * @return int
-     */
     public function getAge()
     {
         return $this->age;
@@ -258,11 +223,6 @@ class Player implements UserInterface
         return $this->birthdate;
     }
 
-    public function setBirthdate($birthdate)
-    {
-        $this->birthdate = $birthdate;
-    }
-
     function calcAge($dob)
     {
         if (!empty($dob)) {
@@ -294,6 +254,40 @@ class Player implements UserInterface
         $this->posY = $posY;
     }
 
+    public function setBirthdate($birthdate)
+    {
+        $this->birthdate = $birthdate;
+    }
+    public function setApartment(Apartment $apartment)
+    {
+        $this->apartment = $apartment;
+    }
+
+    public function getApartment(): Apartment
+    {
+        return $this->apartment;
+    }
+
+
+    public function getResource(): Resource
+    {
+        return $this->resource;
+    }
+
+    public function setResource(Resource $resource)
+    {
+        $this->resource = $resource;
+    }
+
+    public function getDiscotech(): Discotech
+    {
+        return $this->discotech;
+    }
+
+    public function setDiscotech(Discotech $discotech)
+    {
+        $this->discotech = $discotech;
+    }
 
 }
 
