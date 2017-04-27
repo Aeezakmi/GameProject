@@ -3,6 +3,7 @@
 namespace GameBundle\Entity;
 
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,9 +40,20 @@ class Apartment
     /**
      * @var int
      *
-     * @ORM\Column(name="playerId", type="integer")
+     * @ORM\Column(name="playerId", type="integer", nullable=true)
      */
     private $playerId;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="kinti", type="integer")
+     */
+    private $kinti;
+    /**
+     * @var DateTime
+     * @ORM\Column(name="updated_on", type="datetimetz")
+     */
+    private $updated;
 
 
     /**
@@ -103,7 +115,33 @@ class Apartment
     function __construct(Player $player)
     {
         $this->level = 1;
+        $this->kinti = 150;
         $this->player = $player;
+        $this->updated = new DateTime('now');
+    }
+
+    public function getKinti(): int
+    {
+        return $this->kinti;
+    }
+
+    public function setKinti(int $kinti)
+    {
+        $this->kinti = $kinti;
+    }
+
+    public function getUpdated(): DateTime
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(DateTime $updated)
+    {
+        $this->updated = $updated;
+    }
+
+    public function addKinti($kinti){
+        $this->kinti+= $kinti;
     }
 
 }

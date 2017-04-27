@@ -3,6 +3,7 @@
 namespace GameBundle\Controller\Players;
 
 
+use DateTime;
 use GameBundle\Form\LoginForm;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,6 +39,7 @@ class SecurityController extends Controller
             'form' => $form->createView(),
             'error'         => $error,
         ));
+
     }
     /**
      * @Route("/logout", name="security_logout")

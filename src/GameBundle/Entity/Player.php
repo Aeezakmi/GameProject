@@ -85,12 +85,6 @@ class Player implements UserInterface
     private $apartment;
 
     /**
-     * @var Resource
-     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Resource", inversedBy="player", cascade={"persist"})
-     */
-    private $resource;
-
-    /**
      * @var Discotech
      *
      * @ORM\OneToOne(targetEntity="GameBundle\Entity\Discotech", inversedBy="player", cascade={"persist"})
@@ -269,16 +263,6 @@ class Player implements UserInterface
     }
 
 
-    public function getResource(): Resource
-    {
-        return $this->resource;
-    }
-
-    public function setResource(Resource $resource)
-    {
-        $this->resource = $resource;
-    }
-
     public function getDiscotech(): Discotech
     {
         return $this->discotech;
@@ -287,6 +271,15 @@ class Player implements UserInterface
     public function setDiscotech(Discotech $discotech)
     {
         $this->discotech = $discotech;
+    }
+
+    public function pay($num){
+       $money =  $this->getApartment()->getKinti();
+
+       if($money > $num){
+         return $this->getApartment()->setKinti($money -= $num);
+       }
+
     }
 
 }

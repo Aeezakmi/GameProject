@@ -2,7 +2,12 @@
 
 {% block main %}
 
-    <h1>Discotech info!</h1>
+    <h1>Your discotech is level {{ player.discotech.level }}</h1>
+    <h1>1 mutra costs 20 leva!</h1>
+    <form method="post">
+        Number of mutri: <input type="number" name="mutri" value="1"><br>
+        <button type="submit">Buy!</button>
+    </form>
 
 {% endblock %}
 

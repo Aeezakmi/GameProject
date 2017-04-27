@@ -58,17 +58,13 @@ class PlayersController extends Controller
 
             $player->setAge($age);
 
-
-            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
-            $userRole = $roleRepository->findOneBy(['name' => 'ROLE_USER']);
-            $player->addRole($userRole);
-
-            $baseRepo = $this->getDoctrine()->getRepository(Player::class);
-
-            $player->setResource(new Resource($player));
             $player->setApartment(new Apartment($player));
             $player->setDiscotech(new Discotech($player));
 
+            $roleRepository = $this->getDoctrine()->getRepository(Role::class);
+            $player->addRole($roleRepository->findOneBy(['name' => 'ROLE_USER']));
+
+            $baseRepo = $this->getDoctrine()->getRepository(Player::class);
             $base = new Base();
             $base->addBase($player,$baseRepo);
 

@@ -2,6 +2,7 @@
 
 namespace GameBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,17 +31,27 @@ class Discotech
     /**
      * @var Player
      *
-     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Player", inversedBy="discotec")
+     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Player", inversedBy="discotech")
      * @ORM\JoinColumn(name="playerId", referencedColumnName="id")
      */
     private $player;
-
     /**
      * @var int
      *
-     * @ORM\Column(name="playerId", type="integer")
+     * @ORM\Column(name="playerId", type="integer", nullable=true)
      */
     private $playerId;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="mutri", type="integer")
+     */
+    private $mutri;
+    /**
+     *
+     * @ORM\Column(name="updated_on", type="datetimetz")
+     */
+    private $updated;
 
 
 
@@ -84,7 +95,33 @@ class Discotech
     function __construct(Player $player)
     {
         $this->level = 1;
+        $this->mutri = 5;
         $this->player = $player;
+        $this->updated = new DateTime('now');
+    }
+
+    public function getMutri(): int
+    {
+        return $this->mutri;
+    }
+
+    public function setMutri(int $mutri)
+    {
+        $this->mutri = $mutri;
+    }
+
+    public function getUpdated(): DateTime
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(Datetime $updated)
+    {
+        $this->updated = $updated;
+    }
+
+    public function addMutra(int $mutra){
+        $this->mutri+= $mutra;
     }
 }
 
