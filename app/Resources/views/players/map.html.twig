@@ -1,0 +1,14 @@
+<p><label>Name : {{ player.nickname }}</label></p>
+<p>Age : {{ player.age }}</p>
+<p>Mutri : {{ player.discotech.mutri }}</p>
+<p>Position : {{ player.posX }},{{ player.posY }}</p>
+
+{% if current %}
+    {% if player.id == current.id %}
+        <button name="attack" class="btn btn-danger" disabled>Attack!</button>
+    {% else %}
+        <button name="attack" class="btn btn-danger">Attack!</button>
+    {% endif %}
+{% endif %}
+
+

@@ -30,7 +30,7 @@ class PlayersController extends Controller
 
         $form = $this->createForm(PlayerType::class);
 
-        return $this->render(':players:register.html.twig',
+        return $this->render(':users:register.html.twig',
             [
                 'playerForm' => $form->createView()
             ]
@@ -86,7 +86,7 @@ class PlayersController extends Controller
             $this->addFlash('error', "You need to be over 18 to register!");
         }
 
-        return $this->render(':players:register.html.twig',
+        return $this->render(':users:register.html.twig',
             [
                 'playerForm' => $form->createView()
             ]
@@ -98,7 +98,7 @@ class PlayersController extends Controller
      */
     public function profileAction(){
         $player = $this->getUser();
-        return $this->render('players/profile.html.twig',
+        return $this->render('users/profile.html.twig',
             [
                 'player' => $player
             ]);

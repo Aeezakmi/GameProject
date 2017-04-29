@@ -4,6 +4,7 @@ namespace GameBundle\Controller;
 
 
 use DateTime;
+use GameBundle\Entity\Player;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -14,16 +15,17 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
+        $players = $this->getDoctrine()->getRepository(Player::class)->findAll();
+        $player = null;
+
+
         if ($this->get("security.authorization_checker")->isGranted("ROLE_USER")) {
-
-            date_default_timezone_set('Europe/Sofia');
             $player = $this->getUser();
-            $player->getApartment()->setUpdated(New DateTime('now'));
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($player);
-            $em->flush();
-
         }
-        return $this->render('base.html.twig');
+        return $this->render('users/index.html.twig',
+            [
+                'players' => $players,
+                'user' => $player
+            ]);
     }
 }

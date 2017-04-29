@@ -5,6 +5,7 @@ namespace GameBundle\Form;
 use GameBundle\Entity\Player;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -20,7 +21,11 @@ class PlayerType extends AbstractType
             ->add('nickname', TextType::class,
                 [
                     'required' => true,
-                    'label' => 'Nickname:'
+                    'label' => 'Nickname:',
+                    'attr' =>
+                        [
+                            'class' => 'form-control'
+                        ]
                 ])
             ->add('password', RepeatedType::class,
                 [
@@ -28,12 +33,20 @@ class PlayerType extends AbstractType
                     'first_options' =>
                         [
                             'label' => 'Password:',
-                            'error_bubbling' => true
+                            'error_bubbling' => true,
+                            'attr' =>
+                                [
+                                    'class' => 'form-control'
+                                ]
                         ],
                     'second_options' =>
                         [
                             'label' => 'Repeat Password:',
-                            'error_bubbling' => true
+                            'error_bubbling' => true,
+                            'attr' =>
+                                [
+                                    'class' => 'form-control'
+                                ]
                         ],
                     'invalid_message' => "Passwords don't match!",
                     'error_bubbling' => true,
@@ -43,11 +56,15 @@ class PlayerType extends AbstractType
             ->add('email', EmailType::class,
                 [
                     'required' => true,
-                    'label' => 'E-mail:'
+                    'label' => 'E-mail:',
+                    'attr' =>
+                        [
+                            'class' => 'form-control'
+                        ]
                 ])
             ->add('birthdate', BirthdayType::class,
                 [
-                    'label' => 'Born:',
+                    'label' => 'Born on:',
                     'required' => true
                 ]);
     }

@@ -48,12 +48,9 @@ class Discotech
      */
     private $mutri;
     /**
-     *
-     * @ORM\Column(name="updated_on", type="datetimetz")
+     * @ORM\Column(name="upgrade", type="datetimetz", nullable=true)
      */
-    private $updated;
-
-
+    private $upgrade;
 
     public function getId()
     {
@@ -110,18 +107,19 @@ class Discotech
         $this->mutri = $mutri;
     }
 
-    public function getUpdated(): DateTime
-    {
-        return $this->updated;
-    }
-
-    public function setUpdated(Datetime $updated)
-    {
-        $this->updated = $updated;
-    }
 
     public function addMutra(int $mutra){
         $this->mutri+= $mutra;
+    }
+
+    public function getUpgrade()
+    {
+        return $this->upgrade;
+    }
+
+    public function setUpgrade($upgrade)
+    {
+        $this->upgrade = $upgrade;
     }
 }
 

@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="row">
+        <div id="main" class="col-lg-3"></div>
+        <div id="main" class="col-lg-6">
+            <style>
+                .map td {
+                    border: 1px solid grey;
+                    border-collapse: collapse;
+                    width: 30px;
+                    height: 30px;
+                }
+
+                .player {
+                    background: red;
+                }
+
+                .user {
+                    background: green;
+                }
+            </style>
+            <h1 class="text-center">Players map</h1>
+            <table class="map table-default">
+                {% for y in 1..20 %}
+                    <tr>
+                        {% for x in 1..20 %}
+                            {% set n = false %}
+                            {% for player in players %}
+                                {% if player.posX == x and player.posY == y %}
+                                    {% set n = true %}
+                                    <td class="player {% if user and user.id == player.id %}user{% endif %}"
+                                        id="{{ player.id }}">
+
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                            {% if not n %}
+                                <td>
+
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
+
+
+            <script>
+                $(document).ready(function () {
+
+                   //$('.player').tooltip({
+                   //    title: fetchData,
+                   //    html: true,
+                   //    placement: 'bottom',
+                   //    container: 'body',
+                   //    trigger: 'hover'
+                   //});
+                    $(".player").tooltip({ title: fetchData,trigger: "manual" , html: true, animation:false, container: 'body', placement: 'bottom' })
+                        .on("mouseenter", function () {
+                            var _this = this;
+                            $(this).tooltip("show");
+                            $(".tooltip").on("mouseleave", function () {
+                                $(_this).tooltip('hide');
+                            });
+                        }).on("mouseleave", function () {
+                        var _this = this;
+                        setTimeout(function () {
+                            if (!$(".tooltip:hover").length) {
+                                $(_this).tooltip("hide");
+                            }
+                        }, 300);
+                    });
+
+                    function fetchData() {
+                        var fetch_data = '';
+                        var element = $(this);
+                        var id = element.attr("id");
+                        $.ajax({
+                            url: "/map/" + id,
+                            method: "GET",
+                            async: false,
+                            data: {id: id},
+                            success: function (data) {
+                                fetch_data = data;
+                            }
+                        });
+                        return fetch_data;
+                    }
+                });
+            </script>
+
+        </div>
+    </div>
+{% endblock %}

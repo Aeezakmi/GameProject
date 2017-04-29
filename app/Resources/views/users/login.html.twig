@@ -2,7 +2,7 @@
 
 {% block main %}
     <div class="form-group">
-                <h1>Login!</h1>
+                <h1>Login</h1>
 
                 {% if error %}
                     <div class="alert alert-danger">
@@ -13,7 +13,7 @@
                 {{ form_start(form) }}
                 {{ form_row(form._username) }}
                 {{ form_row(form._password) }}
-                <button type="submit" class="btn btn-success">Login<span class="glyphicon glyphicon-lock"></span></button>
+                <br><button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-lock"></span> Login</button>
                 {{ form_end(form) }}
     </div>
 

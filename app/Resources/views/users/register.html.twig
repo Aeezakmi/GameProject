@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-9">
+            <div class="form-group">
+                {% for msg in app.session.flashBag.get('error') %}
+                    <div class="alert alert-danger">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+
+                <h1>Register</h1>
+                {{ form_start(playerForm) }}
+                {{ form_label(playerForm.nickname) }}
+                {{ form_widget(playerForm.nickname) }}
+                {{ form_label(playerForm.email) }}
+                {{ form_widget(playerForm.email) }}
+                {{ form_label(playerForm.password.first) }}
+                {{ form_widget(playerForm.password.first) }}
+                {{ form_label(playerForm.password.second) }}
+                {{ form_widget(playerForm.password.second) }}
+                {{ form_label(playerForm.birthdate) }}
+                {{ form_widget(playerForm.birthdate) }}
+
+                <br>
+                <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Register
+                </button>
+                {{ form_end(playerForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,8 +1,98 @@
 {% extends 'base.html.twig' %}
 
-{% block main %}
+{% block body %}
+    <div class="row">
+        <div class="col-md-9">
+            <h1>Your apartment is level {{ player.apartment.level }} and you have {{ player.apartment.kinti }}
+                leva!</h1>
+            <h2>Time for upgrade <span class="timeleft"
+                                       {% if timestamp is not null %}id="active"{% endif %}>{{ time|date('H:i:s') }}</span>
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>You get {{ upcost }} leva per 2 minutes on this page! </h2>
+            <form method="post">
+                <input type="hidden" name="income" id="income">
+                <button type="submit">Get paid.</button>
+            </form>
+            <br>
+        </div>
+        <div class="col-md-6">
+            <h2>Upgrade apartment for {{ price }} leva.</h2>
 
-    <h1>Your apartment is {{ player.apartment.level }} level and you have {{ player.apartment.kinti }} leva!</h1>
+            {% if  player.apartment.kinti >= price %}
+
+                {% if not timestamp %}
+
+                    <form method="post">
+                        <input type="hidden" value="{{ player.apartment.id }}" name="upgrade" id="upgrade">
+                        <button type="submit">Upgrade!</button>
+                    </form>
+
+                {% endif %}
+
+            {% else %}
+
+                <h2>You don't have enough money for upgrade!</h2>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        function TimeToSeconds(time) {
+            time = time.split(/:/);
+            return time[0] * 3600 + time[1] * 60 + time[2] * 1;
+        }
+
+        function SecondsToTime(time) {
+            var seconds = Math.floor(time),
+                hours = Math.floor(seconds / 3600);
+            seconds -= hours * 3600;
+            var minutes = Math.floor(seconds / 60);
+            seconds -= minutes * 60;
+
+            if (hours < 10) {
+                hours = "0" + hours;
+            }
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            return hours + ':' + minutes + ':' + seconds;
+        }
+
+        jQuery(document).ready(function () {
+            var n;
+
+            function CountDown() {
+                var timer = $('#active');
+                var timeleft = TimeToSeconds(timer.text());
+                if (!isNaN(timeleft)) {
+                    timeleft = parseInt(timeleft);
+                    if (timeleft > 0) {
+
+                        timeleft = timeleft - 1;
+                        timer.text(SecondsToTime(timeleft));
+                    } else {
+                        window.location = window.location;
+                        clearTimeout(n)
+                    }
+                    n = setTimeout(function () {
+                        CountDown()
+                    }, 1000);
+
+                }
+            }
+
+            CountDown();
+        })
+
+    </script>
 
 {% endblock %}
 

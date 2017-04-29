@@ -54,6 +54,10 @@ class Apartment
      * @ORM\Column(name="updated_on", type="datetimetz")
      */
     private $updated;
+    /**
+     * @ORM\Column(name="upgrade", type="datetimetz", nullable=true)
+     */
+    private $upgrade;
 
 
     /**
@@ -142,6 +146,16 @@ class Apartment
 
     public function addKinti($kinti){
         $this->kinti+= $kinti;
+    }
+
+    public function getUpgrade()
+    {
+        return $this->upgrade;
+    }
+
+    public function setUpgrade($upgrade)
+    {
+        $this->upgrade = $upgrade;
     }
 
 }

@@ -1,13 +1,108 @@
 {% extends 'base.html.twig' %}
 
-{% block main %}
+{% block body %}
 
-    <h1>Your discotech is level {{ player.discotech.level }}</h1>
-    <h1>1 mutra costs 20 leva!</h1>
-    <form method="post">
-        Number of mutri: <input type="number" name="mutri" value="1"><br>
-        <button type="submit">Buy!</button>
-    </form>
+    <div class="row">
+        <div class="col-md-9">
+            <h1>Time for upgrade <span class="timeleft"
+                                       {% if timestamp is not null %}id="active"{% endif %}>{{ time|date('H:i:s') }}</span>
+            </h1>
+            <h3>Your discotech is level {{ player.discotech.level }} and you have {{ player.apartment.kinti }}
+                leva.</h3>
+            <h3>You also have {{ player.discotech.mutri }} mutri.</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Buy mutri:</h2>
+            <h3>1 mutra costs {{ mutraCost }} leva.</h3>
+
+            {% if  player.apartment.kinti >= mutraCost %}
+
+                <form method="post">
+                    <input type="number" name="buy_mutri" id="buy_mutri">
+                    <button type="submit">Buy</button>
+                </form><br>
+
+            {% else %}
+                <h2>You don't have enough money to buy mutri!</h2><br>
+            {% endif %}
+        </div>
+        <div class="col-lg-6">
+            <h2>You can upgrade your discotech for {{ price }} leva.</h2>
+
+            {% if  player.apartment.kinti >= price %}
+
+                {% if not timestamp %}
+
+                    <form method="post">
+                        <input type="hidden" value="{{ player.discotech.id }}" name="upgrade" id="upgrade">
+                        <button type="submit">Upgrade!</button>
+                    </form><br>
+
+                {% endif %}
+
+            {% else %}
+                <h2>You don't have enough money for upgrade!</h2><br>
+            {% endif %}
+        </div>
+
+
+
+        <script type="text/javascript">
+            function TimeToSeconds(time) {
+                time = time.split(/:/);
+                return time[0] * 3600 + time[1] * 60 + time[2] * 1;
+            }
+
+            function SecondsToTime(time) {
+                var seconds = Math.floor(time),
+                    hours = Math.floor(seconds / 3600);
+                seconds -= hours * 3600;
+                var minutes = Math.floor(seconds / 60);
+                seconds -= minutes * 60;
+
+                if (hours < 10) {
+                    hours = "0" + hours;
+                }
+                if (minutes < 10) {
+                    minutes = "0" + minutes;
+                }
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
+                }
+                return hours + ':' + minutes + ':' + seconds;
+            }
+
+            jQuery(document).ready(function () {
+                var n;
+
+                function CountDown() {
+                    var timer = $('#active');
+                    var timeleft = TimeToSeconds(timer.text());
+                    if (!isNaN(timeleft)) {
+                        timeleft = parseInt(timeleft);
+                        if (timeleft > 0) {
+
+                            timeleft = timeleft - 1;
+                            timer.text(SecondsToTime(timeleft));
+                        } else {
+                            window.location = window.location;
+                            clearTimeout(n)
+                        }
+                        n = setTimeout(function () {
+                            CountDown()
+                        }, 1000);
+
+                    }
+                }
+
+                CountDown();
+            })
+
+        </script>
+    </div>
 
 {% endblock %}
 
