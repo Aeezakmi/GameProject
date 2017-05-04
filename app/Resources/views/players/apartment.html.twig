@@ -1,41 +1,42 @@
+{# @var player \GameBundle\Entity\Player #}
 {% extends 'base.html.twig' %}
 
 {% block body %}
     <div class="row">
         <div class="col-md-9">
-            <h1>Your apartment is level {{ player.apartment.level }} and you have {{ player.apartment.kinti }}
-                leva!</h1>
-            <h2>Time for upgrade <span class="timeleft"
-                                       {% if timestamp is not null %}id="active"{% endif %}>{{ time|date('H:i:s') }}</span>
-            </h2>
+            <h1>Time for upgrade <span class="timeleft"
+                                       {% if timeleft is not null %}id="active"{% endif %}>{{ time|date('H:i:s') }}</span>
+            </h1>
+            <h3>Your apartment is level {{ player.building('apartment').level }} and you have {{ player.building('apartment').resource }}
+                leva!</h3>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-6">
-            <h2>You get {{ upcost }} leva per 2 minutes on this page! </h2>
+            <h2>You get {{ income }} leva per 2 minutes on this page! </h2>
             <form method="post">
                 <input type="hidden" name="income" id="income">
-                <button type="submit">Get paid.</button>
+                <button type="submit" class="btn btn-success">Get paid.</button>
             </form>
             <br>
         </div>
         <div class="col-md-6">
-            <h2>Upgrade apartment for {{ price }} leva.</h2>
 
-            {% if  player.apartment.kinti >= price %}
+            {% if  player.building('apartment').resource >= price %}
 
-                {% if not timestamp %}
-
+                {% if timeleft is null %}
+                    <h2>Upgrade apartment for {{ price }} leva.</h2>
                     <form method="post">
-                        <input type="hidden" value="{{ player.apartment.id }}" name="upgrade" id="upgrade">
-                        <button type="submit">Upgrade!</button>
+                        <input type="hidden" value="{{ player.building('apartment').id }}" name="upgrade" id="upgrade">
+                        <button type="submit" class="btn btn-primary" id="upgrade">Upgrade!</button>
                     </form>
-
+                    {% else %}
+                    <h3>Upgrade in process!</h3>
                 {% endif %}
 
             {% else %}
-
                 <h2>You don't have enough money for upgrade!</h2>
+                <h2>Upgrading costs: {{ price }} leva.</h2>
             {% endif %}
         </div>
     </div>
@@ -75,7 +76,6 @@
                 if (!isNaN(timeleft)) {
                     timeleft = parseInt(timeleft);
                     if (timeleft > 0) {
-
                         timeleft = timeleft - 1;
                         timer.text(SecondsToTime(timeleft));
                     } else {

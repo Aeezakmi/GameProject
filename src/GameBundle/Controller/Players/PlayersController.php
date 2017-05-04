@@ -4,10 +4,12 @@ namespace GameBundle\Controller\Players;
 
 use GameBundle\Entity\Apartment;
 use GameBundle\Entity\Base;
+use GameBundle\Entity\Building;
 use GameBundle\Entity\Discotech;
 use GameBundle\Entity\Player;
 use GameBundle\Entity\Resource;
 use GameBundle\Entity\Role;
+use GameBundle\Entity\Type;
 use GameBundle\Form\PlayerType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -57,10 +59,29 @@ class PlayersController extends Controller
         if ($form->isValid() && $age >= 18){
 
             $player->setAge($age);
+            $typeRepo = $this->getDoctrine()->getRepository(Type::class);
 
-            $player->setApartment(new Apartment($player));
-            $player->setDiscotech(new Discotech($player));
+            $types = $typeRepo->findAll();
+            foreach ($types as $type){
+                $building = new Building();
+                $building->setType($type);
+                $building->setPlayer($player);
+                $building->setResource($type->getStartingResource());
+                $player->addBuilding($building);
+            }
 
+
+            /*
+            $building = new Building();
+            $building->setType($typeRepo->findOneBy(['name' => 'apartment']));
+            $building->setPlayer($player);
+            $player->addBuilding($building);
+
+            $building = new Building();
+            $building->setType($typeRepo->findOneBy(['name' => 'discotech']));
+            $building->setPlayer($player);
+            $player->addBuilding($building);
+*/
             $roleRepository = $this->getDoctrine()->getRepository(Role::class);
             $player->addRole($roleRepository->findOneBy(['name' => 'ROLE_USER']));
 

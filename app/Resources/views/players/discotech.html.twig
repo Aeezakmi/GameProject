@@ -5,49 +5,56 @@
     <div class="row">
         <div class="col-md-9">
             <h1>Time for upgrade <span class="timeleft"
-                                       {% if timestamp is not null %}id="active"{% endif %}>{{ time|date('H:i:s') }}</span>
+                                       {% if timeleft is not null %}id="active"{% endif %}>{{ time|date('H:i:s') }}</span>
             </h1>
-            <h3>Your discotech is level {{ player.discotech.level }} and you have {{ player.apartment.kinti }}
+            <h3>Your discotech is level {{ player.building('discotech').level }} and you
+                have {{ player.building('apartment').resource }}
                 leva.</h3>
-            <h3>You also have {{ player.discotech.mutri }} mutri.</h3>
+            <h3>You also have {% if player.building('discotech').resource == 1 %}
+                    {{ player.building('discotech').resource }} mutra.
+                {% else %}
+                    {{ player.building('discotech').resource }} mutri.
+                {% endif %}</h3>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-6">
-            <h2>Buy mutri:</h2>
-            <h3>1 mutra costs {{ mutraCost }} leva.</h3>
-
-            {% if  player.apartment.kinti >= mutraCost %}
-
+            {% if player.building('apartment').resource >= mutraCost %}
+                <h2>Buy mutri:</h2>
+                <h3>1 mutra costs {{ mutraCost }} leva.</h3>
                 <form method="post">
                     <input type="number" name="buy_mutri" id="buy_mutri">
-                    <button type="submit">Buy</button>
+                    <button type="submit" class="btn btn-success">Buy</button>
                 </form><br>
 
             {% else %}
-                <h2>You don't have enough money to buy mutri!</h2><br>
+                <h2>You don't have enough money to buy mutri!</h2>
+                <h2>One mutra costs: {{ mutraCost }} leva. </h2>
             {% endif %}
         </div>
         <div class="col-lg-6">
-            <h2>You can upgrade your discotech for {{ price }} leva.</h2>
-
-            {% if  player.apartment.kinti >= price %}
-
-                {% if not timestamp %}
-
-                    <form method="post">
-                        <input type="hidden" value="{{ player.discotech.id }}" name="upgrade" id="upgrade">
-                        <button type="submit">Upgrade!</button>
-                    </form><br>
-
-                {% endif %}
-
+            {% if timeleft %}
+                <h2>Upgrade in progress!</h2>
             {% else %}
-                <h2>You don't have enough money for upgrade!</h2><br>
+                {% if  player.building('apartment').resource >= price %}
+
+                    {% if not timeleft %}
+                        <h2>You can upgrade your discotech for {{ price }} leva.</h2>
+
+                        <form method="post">
+                            <input type="hidden" value="{{ player.building('discotech').id }}" name="upgrade"
+                                   id="upgrade">
+                            <button type="submit" class="btn btn-primary">Upgrade!</button>
+                        </form><br>
+                    {% endif %}
+
+                {% else %}
+                    <h2>You don't have enough money for upgrade!</h2>
+                    <h2>Upgrading costs: {{ price }} leva.</h2>
+                {% endif %}
             {% endif %}
         </div>
-
 
 
         <script type="text/javascript">

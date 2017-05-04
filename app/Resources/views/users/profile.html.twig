@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
+{# @var player \GameBundle\Entity\Player #}
 
 {% block main %}
 
     <h1> Hello, {{ player.nickname }}!</h1>
     <h1> You are {{ player.age }} years old.</h1>
     <h1> You are born on {{ player.birthdate|date('d-m-Y')}}.</h1>
-    <h1> Your apartment is level {{ player.apartment.level }}!</h1>
-    <h1> Your discotech is level {{ player.discotech.level }}!</h1>
-    <h1> You have {{ player.apartment.kinti }} Leva!</h1>
-    <h1> And {{ player.discotech.mutri }} mutri!</h1>
+    <h1> Your apartment is level {{ player.building('apartment').level }}!</h1>
+    <h1> Your discotech is level {{ player.building('discotech').level }}!</h1>
+    <h1> You have {{ player.building('apartment').resource }} leva and {{ player.building('discotech').resource }} mutri!</h1>
+
 
 {% endblock %}
 

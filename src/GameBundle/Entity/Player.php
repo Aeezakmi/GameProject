@@ -62,6 +62,13 @@ class Player implements UserInterface
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="GameBundle\Entity\Building", mappedBy="player",cascade={"persist"})
+     */
+    private $buildings;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\ManyToMany(targetEntity="GameBundle\Entity\Role")
      * @ORM\JoinTable(name="players_roles",
      *     joinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="id")},
@@ -77,19 +84,6 @@ class Player implements UserInterface
      * @ORM\Column(name="pos_y", type="integer")
      */
     private $posY;
-    /**
-     * @var Apartment
-     *
-     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Apartment", inversedBy="player", cascade={"persist"})
-     */
-    private $apartment;
-
-    /**
-     * @var Discotech
-     *
-     * @ORM\OneToOne(targetEntity="GameBundle\Entity\Discotech", inversedBy="player", cascade={"persist"})
-     */
-    private $discotech;
 
     public function getRoles()
     {
@@ -252,34 +246,32 @@ class Player implements UserInterface
     {
         $this->birthdate = $birthdate;
     }
-    public function setApartment(Apartment $apartment)
+
+
+    public function getBuildings()
     {
-        $this->apartment = $apartment;
+        return $this->buildings;
     }
 
-    public function getApartment(): Apartment
+    public function getBuilding($name): Building
     {
-        return $this->apartment;
+        $buildings = $this->getBuildings();
+        $iterator = $buildings->getIterator();
+        $iterator->uasort(function (Building $a,Building $b) use($name) {
+            return (($a->getType()->getName() == $name) > ($b->getType()->getName() == $name)) ? -1 : 1;
+        });
+        $building = new \Doctrine\Common\Collections\ArrayCollection(iterator_to_array($iterator));
+        return $building->first();
     }
 
-
-    public function getDiscotech(): Discotech
+    public function setBuildings($buildings)
     {
-        return $this->discotech;
+        $this->buildings = $buildings;
     }
 
-    public function setDiscotech(Discotech $discotech)
+    public function addBuilding(Building $building)
     {
-        $this->discotech = $discotech;
-    }
-
-    public function pay($num){
-       $money =  $this->getApartment()->getKinti();
-
-       if($money > $num){
-         return $this->getApartment()->setKinti($money -= $num);
-       }
-
+        $this->buildings[] = $building;
     }
 
 }

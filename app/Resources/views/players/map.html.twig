@@ -1,9 +1,11 @@
 <p><label>Name : {{ player.nickname }}</label></p>
-<p>Age : {{ player.age }}</p>
-<p>Mutri : {{ player.discotech.mutri }}</p>
-<p>Position : {{ player.posX }},{{ player.posY }}</p>
+<p>Age: {{ player.age }}</p>
+<p>Mutri: {{ player.building('discotech').resource }} </p>
+<p>Position: {{ player.posX }},{{ player.posY }}</p>
 
-{% if current %}
+{% if not current %}
+    <p>Log in to attack!</p>
+{% else %}
     {% if player.id == current.id %}
         <button name="attack" class="btn btn-danger" disabled>Attack!</button>
     {% else %}

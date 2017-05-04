@@ -1,6 +1,6 @@
 <?php
 
-namespace GameBundle\Controller\Players;
+namespace GameBundle\Controller\Admins;
 
 use GameBundle\Entity\Player;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -16,7 +16,7 @@ class MapController extends Controller
      */
     public function mapAction($id)
     {
-
+        $current = null;
         if ($this->get("security.authorization_checker")->isGranted("ROLE_USER")) {
             $current = $this->getUser();
         }
