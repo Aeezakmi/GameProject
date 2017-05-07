@@ -1,7 +1,9 @@
+{# @var player \GameBundle\Entity\Player #}
 <p><label>Name : {{ player.nickname }}</label></p>
 <p>Age: {{ player.age }}</p>
 <p>Mutri: {{ player.building('discotech').resource }} </p>
 <p>Position: {{ player.posX }},{{ player.posY }}</p>
+
 
 {% if not current %}
     <p>Log in to attack!</p>
@@ -9,7 +11,12 @@
     {% if player.id == current.id %}
         <button name="attack" class="btn btn-danger" disabled>Attack!</button>
     {% else %}
-        <button name="attack" class="btn btn-danger">Attack!</button>
+        <p>Troops travel time: {{ (travelTime-7200)|date('H:i:s') }}</p>
+        {% if current.building('discotech').resource == 0 %}You need troops to attack!{% endif %}
+        <form method="post">
+            <input type="hidden" name="time" value="{{ travelTime }}">
+            <button type="submit" name="attack" value="{{ player.id }}" class="btn btn-danger" {% if current.building('discotech').resource == 0 %}disabled{% endif %}>Attack!</button>
+        </form>
     {% endif %}
 {% endif %}
 

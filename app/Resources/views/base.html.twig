@@ -4,31 +4,39 @@
     <meta charset="UTF-8"/>
     <title>{% block title %}GameProject{% endblock %}</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     {% block stylesheets %}{% endblock %}
 
     {% block javascripts %}{% endblock %}
 
     <script src="{{ asset('js/jquery-2.1.4.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="{{ asset('js/tether.min.js') }}"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
 
 </head>
 
 <body>
 
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="{{ path('homepage') }}">GameProject</a>
-        </div>
+<nav class="navbar navbar-inverse bg-inverse navbar-fixed-top navbar-toggleable-md">
+    <a class="navbar-brand" href="{{ path('homepage') }}">GameProject</a>
+    <div class="collapse navbar-collapse">
+        {% if is_granted('ROLE_USER') %}
         <ul class="nav navbar-nav">
-            {% if is_granted('ROLE_USER') %}
-                    {{ render(controller('GameBundle:Admins/Navbar:index')) }}
-            {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Buildings</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
 
+                        {{ render(controller('GameBundle:Admins/Navbar:index')) }}
+
+                </div>
+            </li>
+            <li><a href="{{ path('player_report') }}">Battle reports</a> </li>
         </ul>
+        {% endif %}
+
         <ul class="nav navbar-nav navbar-right">
             {% if is_granted('ROLE_ADMIN') %}
                 <li><a href="{{ path('admin_page') }}">Admins page</a></li>

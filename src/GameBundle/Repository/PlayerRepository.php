@@ -14,6 +14,4 @@ class PlayerRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->execute();
     }
-
-
 }

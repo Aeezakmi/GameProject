@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
     <div class="row">
         <div class="col-md-3"></div>
@@ -47,7 +46,14 @@
 
             <script>
                 $(document).ready(function () {
-                    $(".player").tooltip({ title: fetchData,trigger: "manual" , html: true, animation:false, container: 'body', placement: 'bottom' })
+                    $(".player").tooltip({
+                        title: fetchData,
+                        trigger: "manual",
+                        html: true,
+                        animation: false,
+                        container: 'body',
+                        placement: 'bottom'
+                    })
                         .on("mouseenter", function () {
                             var _this = this;
                             $(this).tooltip("show");
@@ -81,8 +87,110 @@
             </script>
 
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
+            {% if user %}
+                {% if attacks %}
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th colspan="3" style="text-align: center">Active attacks</th>
+                        </tr>
 
+                        <tr>
+                            <th>Player</th>
+                            <th>Type</th>
+                            <th>Timeleft</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for attack in attacks %}
+                            {% if attack.attacker == user.nickname %}
+                                <tr class="table-success">
+                                    <td>{{ attack.target }}</td>
+                                    <td>Outgoing</td>
+                                    <td class="timeleft"
+                                        data-id="{{ attack.id }}"
+                                        data-time="{{ attack.time }}">{{ (attack.time)|date('d\\d H:i:s') }}</td>
+                                </tr>
+                            {% else %}
+                                <tr class="table-danger">
+                                    <td>{{ attack.attacker }}</td>
+                                    <td>Incoming</td>
+                                    <td class="timeleft"
+                                        data-id="{{ attack.id }}"
+                                        data-time="{{ attack.time }}">{{ (attack.time)|date('d\\d H:i:s') }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                {% endif %}
+            {% endif %}
         </div>
     </div>
+    <script type="text/javascript">
+        function TimeToSeconds(time) {
+            time = time.split(/:/);
+            return time[0] * 3600 + time[1] * 60 + time[2] * 1;
+        }
+
+        function SecondsToTime(time) {
+            var seconds = Math.floor(time),
+                hours = Math.floor(seconds / 3600);
+            seconds -= hours * 3600;
+            var minutes = Math.floor(seconds / 60);
+            seconds -= minutes * 60;
+
+            if (hours < 10) {
+                hours = "0" + hours;
+            }
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            return hours + ':' + minutes + ':' + seconds;
+        }
+
+        jQuery(document).ready(function () {
+            var n;
+
+            function CountDown() {
+                $('.timeleft').each(function () {
+
+                    var timeleft = $(this).data('time');//TimeToSeconds($(this).text());
+                    if (!isNaN(timeleft)) {
+                        timeleft = parseInt(timeleft);
+                        if (timeleft > 0) {
+                            timeleft = timeleft - 1;
+                            $(this).data('time', timeleft);
+                            $(this).text(SecondsToTime(timeleft));
+                        } else {
+                            $.post(
+                                '/attack',
+                                {'id': $(this).data('id')}
+                            ).done(function () {
+                                window.location = window.location;
+
+                            });
+
+                            clearTimeout(n)
+                        }
+                    }
+                });
+                n = setTimeout(function () {
+                    CountDown()
+                }, 1000);
+
+            }
+
+
+            CountDown();
+        })
+
+    </script>
 {% endblock %}

@@ -256,11 +256,16 @@ class Player implements UserInterface
     public function getBuilding($name): Building
     {
         $buildings = $this->getBuildings();
-        $iterator = $buildings->getIterator();
-        $iterator->uasort(function (Building $a,Building $b) use($name) {
-            return (($a->getType()->getName() == $name) > ($b->getType()->getName() == $name)) ? -1 : 1;
+       // $iterator = $buildings->getIterator();
+       // $iterator->uasort(function (Building $a,Building $b) use($name) {
+       //     return (($a->getType()->getName() == $name) > ($b->getType()->getName() == $name)) ? -1 : 1;
+       // });
+       // $building = new \Doctrine\Common\Collections\ArrayCollection(iterator_to_array($iterator));
+       // return $building->first();
+        $building =  $buildings->filter(function(Building $entity) use ($name){
+            return $entity->getType()->getName() === $name;
         });
-        $building = new \Doctrine\Common\Collections\ArrayCollection(iterator_to_array($iterator));
+
         return $building->first();
     }
 

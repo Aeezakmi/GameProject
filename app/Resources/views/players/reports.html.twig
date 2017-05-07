@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th colspan="3" style="text-align: center; font-size: xx-large">Attack reports</th>
+        </tr>
+
+        <tr>
+            <th>Player</th>
+            <th>Type</th>
+            <th>Winner</th>
+            <th>Mutri lost</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for attack in attacks %}
+
+                <tr class="table-{% if attack.winner == user.nickname %}success{% else %}danger{% endif %}">
+                    <td>{% if attack.attacker == user.nickname %}{{ attack.target }}{% else %}{{ attack.attacker }}{% endif %}</td>
+                    <td>{% if attack.attacker == user.nickname %}Outgoing{% else %}Incoming{% endif %}</td>
+                    <td>{{ attack.winner }}</td>
+                    <td>{{ attack.resource }}</td>
+                </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+{% endblock %}
+
